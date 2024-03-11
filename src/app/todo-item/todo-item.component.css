@@ -137,6 +137,12 @@ input[type="checkbox"] {
   }
 }
 
+@media (min-width: 900px) {
+  .todo-item {
+    width: 550px;
+  }
+}
+
 @media (min-width: 1280px) {
   input[type="checkbox"] {
     width: 1.75rem;
