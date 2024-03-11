@@ -1,0 +1,88 @@
+<mat-card
+  class="todo-item"
+  [ngClass]="getPriorityClass(todo.attributes.priority)"
+>
+  <div class="checkbox-cont">
+    <input
+      type="checkbox"
+      class="checkbox"
+      color="primary"
+      [ngModel]="todo.attributes.checked"
+      (change)="toggleTodoStatus($event)"
+    />
+  </div>
+
+  <div class="content">
+    <div class="content-left" (click)="toggleExpanded()">
+      <div
+        class="title"
+        mat-typography
+        [ngClass]="{ checked: todo.attributes.checked }"
+      >
+        <!-- checking if it is expanded -->
+        <ng-container *ngIf="isExpanded; else titleShort">
+          {{ todo.attributes.title }}
+        </ng-container>
+        <ng-template #titleShort>
+          <!-- showing only first 10 letters(signs) of the title -->
+          {{
+            todo.attributes.title.length > 10
+              ? (todo.attributes.title | slice : 0 : 10) + "..."
+              : todo.attributes.title
+          }}
+        </ng-template>
+      </div>
+
+      <div
+        class="description"
+        mat-typography
+        [ngClass]="{ checked: todo.attributes.checked }"
+      >
+        <!-- checking if it is expanded -->
+        <ng-container *ngIf="isExpanded; else descShort">
+          {{ todo.attributes.description }}
+        </ng-container>
+        <ng-template #descShort>
+          <!-- showing only first 30 letters(signs) of the title -->
+          {{
+            todo.attributes.description.length > 30
+              ? (todo.attributes.description | slice : 0 : 30) + "..."
+              : todo.attributes.description
+          }}
+        </ng-template>
+      </div>
+
+      <div class="category" mat-typography>
+        {{ todo.attributes.category.data.attributes.title }}
+      </div>
+    </div>
+
+    <div class="content-right">
+      <div class="date" mat-typography>
+        {{ todo.attributes.dueDate | date }}
+      </div>
+
+      <div class="actions">
+        <button
+          mat-icon-button
+          aria-label="Edit"
+          class="icon-btn"
+          (click)="handleEdit(todo)"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+
+        <button
+          mat-icon-button
+          aria-label="Delete"
+          class="icon-btn"
+          (click)="handleDelete(todo.id)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</mat-card>
+
+<app-todo-form *ngIf="isEditted"></app-todo-form>

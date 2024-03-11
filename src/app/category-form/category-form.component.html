@@ -1,0 +1,36 @@
+<div class="form-cont">
+  <mat-card>
+    <mat-card-header fxLayout="row" fxLayoutAlign="center">
+      <mat-card-title>New Category</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="categoryForm">
+        <mat-form-field>
+          <mat-label>Title</mat-label>
+          <input matInput formControlName="title" placeholder="Title" />
+          <mat-error
+            *ngIf="
+              categoryForm.get('title')?.invalid &&
+              categoryForm.get('title')?.touched
+            "
+            >Title is required and must be max 15 characters</mat-error
+          >
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions fxLayout="row" fxLayoutAlign="space-between">
+      <button mat-raised-button color="primary" (click)="handleCancelBtn()">
+        Cancel
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="handleCreateBtn()"
+        [disabled]="categoryForm.invalid"
+      >
+        Create
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

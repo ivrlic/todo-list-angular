@@ -1,0 +1,55 @@
+<mat-toolbar color="primary" class="header">
+  <button mat-icon-button (click)="toggleNavigation()" class="show-nav-btn">
+    <mat-icon class="show-nav-icon" aria-label="menu"> menu </mat-icon>
+  </button>
+  <span>Todo list</span>
+</mat-toolbar>
+
+<mat-toolbar
+  [@openClose]="showNavigation ? 'open' : 'closed'"
+  class="side-nav-cont"
+>
+  <!-- First section -->
+  <div class="greet-cont">
+    <mat-icon class="profile-img">person</mat-icon>
+    <p class="greet-text">Good day, my dear!</p>
+  </div>
+
+  <!-- Second section -->
+  <div class="tasks-cont">
+    <button mat-raised-button (click)="showTodoForm()">
+      New task<mat-icon>add</mat-icon>
+    </button>
+    <mat-nav-list>
+      <mat-list-item>TODAY</mat-list-item>
+      <mat-list-item>UPCOMING</mat-list-item>
+      <mat-list-item>OVERDUE</mat-list-item>
+      <mat-list-item>UNCOMPLETED</mat-list-item>
+      <mat-list-item>COMPLETED</mat-list-item>
+    </mat-nav-list>
+  </div>
+
+  <!-- Third section -->
+  <div class="category-cont">
+    <button mat-raised-button (click)="showCategoryForm()">
+      Add category<mat-icon>add</mat-icon>
+    </button>
+    <mat-nav-list>
+      <div *ngFor="let category of categories" class="category-title-cont">
+        <mat-list-item>
+          {{ category.attributes.title.toUpperCase() }}
+        </mat-list-item>
+        <button
+          mat-icon-button
+          aria-label="Delete"
+          class="icon-btn"
+          [disabled]="category.attributes.title === 'General'"
+          *ngIf="category.attributes.title !== 'General'"
+          (click)="handleDeleteCategoryBtn(category.id)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </mat-nav-list>
+  </div>
+</mat-toolbar>

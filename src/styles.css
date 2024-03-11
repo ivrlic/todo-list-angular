@@ -1,1 +1,37 @@
 /* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* ++++++++++++++++++++
+??? ovo prebacit u svoju komponentu??? (mat-card, mat-card-header, mat-card-title, mat-form-field) 
++++++++++++++++++++++++
+*/
+
+mat-card {
+  width: fit-content;
+  padding: 1rem 2rem;
+  text-align: center;
+}
+
+mat-card-header {
+  margin-bottom: 1.5rem;
+}
+
+mat-card-title {
+  text-align: center;
+  width: fit-content;
+  border-bottom: 1px solid #f8fff8;
+  color: #f8fff8;
+  letter-spacing: 2px;
+}
+
+mat-form-field {
+  width: 90%;
+}

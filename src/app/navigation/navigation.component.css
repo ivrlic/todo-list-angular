@@ -1,0 +1,92 @@
+.toolbar-icon {
+  margin-right: 1rem;
+}
+
+.show-nav-icon {
+  font-size: 1.5rem;
+  width: fit-content;
+  height: fit-content;
+}
+
+.show-nav-btn {
+  margin-right: 0.75rem;
+  z-index: 2;
+}
+
+.side-nav-cont {
+  position: absolute;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  width: 250px;
+  z-index: 2;
+  background-color: #e8e9f2;
+  box-shadow: 0 4px 8px 2px rgba(0, 0, 0, 0.2);
+}
+
+.greet-cont {
+  width: 50%;
+  margin-top: 2rem;
+  text-align: center;
+  white-space: pre-wrap;
+}
+
+.profile-img {
+  width: fit-content;
+  height: fit-content;
+  font-size: 3rem;
+  color: #3f51b5;
+}
+
+.greet-cont,
+.tasks-cont {
+  border-bottom: 1px solid #f8fff8;
+  margin-bottom: 2rem;
+}
+
+.greet-text {
+  font-size: 1rem;
+}
+
+.category-title-cont {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.icon-btn {
+  color: #00000043;
+}
+
+/* media queries */
+@media (min-width: 1280px) {
+  mat-toolbar span {
+    font-size: 1.5rem;
+  }
+
+  .show-nav-icon {
+    font-size: 1.75rem;
+  }
+
+  .side-nav-cont {
+    width: 300px;
+  }
+
+  .greet-text {
+    font-size: 1.125rem;
+  }
+
+  mat-nav-list mat-list-item {
+    font-size: 1.25rem;
+  }
+
+  .category-cont mat-list-item {
+    margin-left: 0.5rem;
+  }
+
+  .tasks-cont button,
+  .category-cont button {
+    font-size: 1rem;
+  }
+}

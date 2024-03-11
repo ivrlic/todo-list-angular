@@ -1,0 +1,494 @@
+api.service.ts: ```
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ApiService {
+  private todoUrl = 'http://localhost:1337/api/todos?populate[0]=category';
+  private categoryUrl = 'http://localhost:1337/api/categories';
+
+  constructor(private http: HttpClient) {}
+
+  getCategories(): Observable<any> {
+    return this.getData(this.categoryUrl);
+  }
+
+  getTodos(): Observable<any[]> {
+    return this.getData(this.todoUrl);
+  }
+
+  createCategory(categoryData: any): Observable<any> {
+    return this.createData(this.categoryUrl, categoryData);
+  }
+
+  deleteCategory(categoryId: any): Observable<any> {
+    return this.deleteData(this.categoryUrl, categoryId);
+  }
+
+  // private getHeaders(): HttpHeaders {
+  //   const username = 'Ivan';
+  //   const email = 'ivrlic@gmail.com';
+  //   const password = 'Pass123123';
+
+  // const headers = new HttpHeaders({
+  //   'Content-Type': 'application/json',
+  //   Authorization: 'Basic ' + btoa(`${username}:${email}:${password}`),
+  // });
+  // return headers;
+  // }
+
+  private getHeaders(): HttpHeaders {
+    const token =
+      '5f4c76160711732c19f6dfc19eeff85ae78a8fd55068d8717ba34f16a64f466c614d56cef88910fe69bc9e8c3c543eeec5baaf4f1046e493fb026beeddd26714ed67d340164a7f1e6b3831893a8ba01ad6b45439d05a0ef0ccfec3d963fc12f4348b1abf97903462179bca0ddfe3180671744674ce8324d7038735fa9a4cffff';
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+  }
+
+  getData(apiUrl: string): Observable<any> {
+    const headers = this.getHeaders();
+    const data = this.http
+      .get<any>(`${apiUrl}`, {
+        headers,
+      })
+      .pipe(
+        catchError((error) => {
+          console.error('Greška prilikom dohvaćanja podataka:', error);
+          return throwError(() => new Error('Something went wrong'));
+        })
+      );
+    return data;
+  }
+
+  createData(apiUrl: string, data: any): Observable<any> {
+    const headers = this.getHeaders();
+    return this.http.post<any>(apiUrl, data, { headers }).pipe(
+      catchError((error) => {
+        console.error('Greška prilikom stvaranja podataka:', error);
+        return throwError(() => new Error('Something went wrong'));
+      })
+    );
+  }
+
+  updateData(apiUrl: string, data: any, id: string): Observable<any> {
+    const headers = this.getHeaders();
+    const url = `${apiUrl}/${id}`;
+    return this.http.put<any>(url, data, { headers }).pipe(
+      catchError((error) => {
+        console.error('Greška prilikom ažuriranja podataka:', error);
+        return throwError(() => new Error('Something went wrong'));
+      })
+    );
+  }
+
+  deleteData(apiUrl: string, id: string): Observable<any> {
+    const headers = this.getHeaders();
+    const url = `${apiUrl}//${id}`;
+    return this.http.delete<any>(url, { headers }).pipe(
+      catchError((error) => {
+        console.error('Greška prilikom brisanja podataka:', error);
+        return throwError(() => new Error('Something went wrong'));
+      })
+    );
+  }
+
+  // Ostale metode za slanje HTTP zahtjeva...
+}
+
+```
+
+
+navigation.component.ts: ```
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  trigger,
+  state,
+  style,
+  animate,
+  transition,
+} from '@angular/animations';
+import { brakePoint1 } from '../const/const-screen-width';
+import { ApiService } from '../services/api.service';
+
+@Component({
+  selector: 'app-navigation',
+  templateUrl: './navigation.component.html',
+  styleUrls: ['./navigation.component.css'],
+  animations: [
+    trigger('openClose', [
+      state(
+        'open',
+        style({
+          transform: 'translateX(0)',
+        })
+      ),
+      state(
+        'closed',
+        style({
+          transform: 'translateX(-100%)',
+        })
+      ),
+      transition('open => closed', [animate('0.15s')]),
+      transition('closed => open', [animate('0.2s')]),
+    ]),
+  ],
+})
+export class NavigationComponent implements OnInit {
+  @Output() showTodoFormEvent = new EventEmitter<boolean>();
+  @Output() showCategoryFormEvent = new EventEmitter<boolean>();
+  @Output() showTodoListEvent = new EventEmitter<boolean>();
+
+  showNavigation: boolean = false;
+  screenWidth!: number;
+  categories: any[] = [];
+
+  constructor(private apiService: ApiService) {}
+
+  ngOnInit() {
+    this.screenWidth = window.innerWidth;
+    this.checkScreenWidth();
+    this.getCategories();
+  }
+
+  // while resizing checking screen size and showing or hiding navigation according to the screen size
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    this.screenWidth = window.innerWidth;
+    this.checkScreenWidth();
+  }
+
+  // if screen width is as desktop screen show navigation, else hide it
+  checkScreenWidth() {
+    if (this.screenWidth >= brakePoint1) {
+      this.showNavigation = true;
+    } else {
+      this.showNavigation = false;
+    }
+  }
+
+  // toggle navigation (on click), but only if screen is narrower than desktop screen
+  toggleNavigation() {
+    if (this.screenWidth < brakePoint1) {
+      this.showNavigation = !this.showNavigation;
+    }
+  }
+
+  // close navigation if clicked outside of nav btn and navigaton cont
+  @HostListener('document:click', ['$event'])
+  onClick(event: Event) {
+    if (
+      this.showNavigation === true &&
+      event.target &&
+      !(event.target as HTMLElement).closest('.side-nav-cont') &&
+      !(event.target as HTMLElement).closest('.show-nav-btn') &&
+      this.screenWidth < brakePoint1
+    ) {
+      this.showNavigation = false;
+    }
+  }
+
+  // getting categories from the api (upper case)
+  getCategories() {
+    this.apiService.getCategories().subscribe({
+      next: (response) => {
+        this.categories = response.data;
+      },
+      error: (error) => {
+        console.error('Error fetching categories:', error);
+      },
+    });
+  }
+
+  // open todo form and close todo list
+  showTodoForm() {
+    this.showTodoFormEvent.emit(true);
+    this.showTodoListEvent.emit(false);
+  }
+
+  // open category form and close todo list
+  showCategoryForm() {
+    this.showCategoryFormEvent.emit(true);
+    this.showTodoListEvent.emit(false);
+  }
+
+  handleDeleteCategoryBtn(id: any) {
+    this.apiService.deleteCategory(id);
+    console.log(id);
+  }
+}
+
+```
+
+
+navigation.component.html: ```
+<mat-toolbar color="primary" class="header">
+  <button mat-icon-button (click)="toggleNavigation()" class="show-nav-btn">
+    <mat-icon class="show-nav-icon" aria-label="menu"> menu </mat-icon>
+  </button>
+  <span>Todo list</span>
+</mat-toolbar>
+
+<mat-toolbar
+  [@openClose]="showNavigation ? 'open' : 'closed'"
+  class="side-nav-cont"
+>
+  <!-- First section -->
+  <div class="greet-cont">
+    <mat-icon class="profile-img">person</mat-icon>
+    <p class="greet-text">Good day, my dear!</p>
+  </div>
+
+  <!-- Second section -->
+  <div class="tasks-cont">
+    <button mat-raised-button (click)="showTodoForm()">
+      New task<mat-icon>add</mat-icon>
+    </button>
+    <mat-nav-list>
+      <mat-list-item>TODAY</mat-list-item>
+      <mat-list-item>UPCOMING</mat-list-item>
+      <mat-list-item>OVERDUE</mat-list-item>
+      <mat-list-item>UNCOMPLETED</mat-list-item>
+      <mat-list-item>COMPLETED</mat-list-item>
+    </mat-nav-list>
+  </div>
+
+  <!-- Third section -->
+  <div class="category-cont">
+    <button mat-raised-button (click)="showCategoryForm()">
+      Add category<mat-icon>add</mat-icon>
+    </button>
+    <mat-nav-list>
+      <div *ngFor="let category of categories" class="category-title-cont">
+        <mat-list-item>
+          {{ category.attributes.title.toUpperCase() }}
+        </mat-list-item>
+        <button
+          mat-icon-button
+          aria-label="Delete"
+          class="icon-btn"
+          (click)="handleDeleteCategoryBtn(category.id)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </mat-nav-list>
+  </div>
+</mat-toolbar>
+
+```
+
+
+category-form.component.ts: ```
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DatePipe } from '@angular/common';
+import { ApiService } from '../services/api.service';
+
+@Component({
+  selector: 'app-todo-form',
+  templateUrl: './todo-form.component.html',
+  styleUrls: ['./todo-form.component.css'],
+})
+export class TodoFormComponent implements OnInit {
+  @Output() showTodoFormEvent = new EventEmitter<boolean>();
+  @Output() showTodoListEvent = new EventEmitter<boolean>();
+
+  todoForm: FormGroup;
+  formattedDate: string | null;
+  categories: any[] = [];
+
+  constructor(
+    private fb: FormBuilder,
+    private datePipe: DatePipe,
+    private apiService: ApiService
+  ) {
+    this.todoForm = this.fb.group({
+      title: ['', [Validators.required, Validators.maxLength(50)]],
+      description: ['', [Validators.required, Validators.maxLength(200)]],
+      priority: ['', Validators.required],
+      category: ['', Validators.required],
+      dueDate: ['', Validators.required],
+    });
+
+    const date = new Date();
+    this.formattedDate = this.datePipe.transform(date, 'MM/dd/yyyy');
+  }
+
+  ngOnInit(): void {
+    this.getCategories();
+  }
+
+  // close todo form and open todo list
+  handleCancelBtn() {
+    this.showTodoFormEvent.emit(false);
+    this.showTodoListEvent.emit(true);
+    this.scrollToTop();
+  }
+
+  // create new todo, close todo form and open todo list
+  handleConfirmBtn() {
+    this.createTodo();
+    this.showTodoFormEvent.emit(false);
+    this.showTodoListEvent.emit(true);
+    this.scrollToTop();
+  }
+
+  createTodo() {
+    if (this.todoForm.valid) {
+      // Ovdje dodajte logiku za stvaranje novog zadatka
+      console.log('New todo created!', this.todoForm.value);
+    } else {
+      console.log('Form is invalid');
+    }
+  }
+
+  // getting categories from the api (upper case)
+  getCategories() {
+    this.apiService.getCategories().subscribe({
+      next: (response) => {
+        this.categories = response.data;
+      },
+      error: (error) => {
+        console.error('Error fetching categories:', error);
+      },
+    });
+  }
+
+  scrollToTop() {
+    window.scrollTo({
+      top: 0,
+    });
+  }
+}
+
+```
+
+
+
+category-form.component.html: ```
+<div class="form-cont">
+  <mat-card>
+    <mat-card-header fxLayout="row" fxLayoutAlign="center">
+      <mat-card-title>New Category</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="categoryForm">
+        <mat-form-field>
+          <mat-label>Title</mat-label>
+          <input matInput formControlName="title" placeholder="Title" />
+          <mat-error
+            *ngIf="
+              categoryForm.get('title')?.invalid &&
+              categoryForm.get('title')?.touched
+            "
+            >Title is required and must be max 15 characters</mat-error
+          >
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions fxLayout="row" fxLayoutAlign="space-between">
+      <button mat-raised-button color="primary" (click)="handleCancelBtn()">
+        Cancel
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="handleCreateBtn()"
+        [disabled]="categoryForm.invalid"
+      >
+        Create
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+```
+
+app.component.ts: ```
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
+})
+export class AppComponent implements OnInit {
+  title = 'todo-list';
+  showTodoForm: boolean = false;
+  showCategoryForm: boolean = false;
+  showTodoList: boolean = true;
+
+  ngOnInit(): void {
+    this.scrollToTop();
+  }
+
+  // if todo form is open, category form has to be closed
+  onShowTodoForm(value: boolean) {
+    this.scrollToTop();
+    this.showTodoForm = value;
+    this.showCategoryForm = !value;
+  }
+
+  // if category form is open, todo form has to be closed
+  onShowCategoryForm(value: boolean) {
+    this.scrollToTop();
+    this.showCategoryForm = value;
+    this.showTodoForm = !value;
+  }
+
+  scrollToTop() {
+    window.scrollTo({
+      top: 0,
+    });
+  }
+}
+
+```
+
+
+
+app.component.html: ```
+<!-- (showTodoFormEvent)="showTodoForm = $event"
+(showCategoryFormEvent)="showCategoryForm = $event" -->
+<app-navigation
+  (showTodoFormEvent)="onShowTodoForm($event)"
+  (showCategoryFormEvent)="onShowCategoryForm($event)"
+  (showTodoListEvent)="showTodoList = $event"
+></app-navigation>
+
+<app-todo-form
+  *ngIf="showTodoForm"
+  (showTodoFormEvent)="showTodoForm = $event"
+  (showTodoListEvent)="showTodoList = $event"
+></app-todo-form>
+
+<app-category-form
+  *ngIf="showCategoryForm"
+  (showCategoryFormEvent)="showCategoryForm = $event"
+  (showTodoListEvent)="showTodoList = $event"
+></app-category-form>
+
+<app-todo-list *ngIf="showTodoList"></app-todo-list>
+
+
+
+```
+
+
+
+
+
+može li se nekako napraviti da se klikom na botun create unutar category-form komponente pokrene funkcija getCategories() unutar navigation komponente? te dvije komponente nisu međusobno direktno povezane nego su obje povezane izravno s app komponentom. Kako mogu riješiti problem? 
+
