@@ -26,8 +26,8 @@
         <ng-template #titleShort>
           <!-- showing only first 10 letters(signs) of the title -->
           {{
-            todo.attributes.title.length > 10
-              ? (todo.attributes.title | slice : 0 : 10) + "..."
+            todo.attributes.title.length > 20
+              ? (todo.attributes.title | slice : 0 : 20) + "..."
               : todo.attributes.title
           }}
         </ng-template>
