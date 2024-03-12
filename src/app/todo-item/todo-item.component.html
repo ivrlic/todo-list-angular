@@ -1,4 +1,5 @@
 <mat-card
+  *ngIf="todo.attributes.category.data"
   class="todo-item"
   [ngClass]="getPriorityClass(todo.attributes.priority)"
 >

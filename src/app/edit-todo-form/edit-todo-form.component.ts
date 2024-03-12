@@ -47,7 +47,7 @@ export class EditTodoFormComponent implements OnInit {
       description: this.currentTodo.attributes.description,
       priority: this.currentTodo.attributes.priority,
       dueDate: this.currentTodo.attributes.dueDate,
-      category: [this.currentTodo.attributes.category.data.id],
+      category: this.currentTodo.attributes.category,
     });
   }
 
