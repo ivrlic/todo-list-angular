@@ -7,11 +7,10 @@ import { ApiService } from '../services/api.service';
   styleUrls: ['./todo-list.component.css'],
 })
 export class TodoListComponent implements OnInit {
-  @Output() isEditModeEvent: EventEmitter<boolean> =
-    new EventEmitter<boolean>();
-  @Output() currentTodoEvent: EventEmitter<boolean> =
-    new EventEmitter<boolean>();
+  // @Output() currentTodoEvent: EventEmitter<boolean> =
+  //   new EventEmitter<boolean>();
   todos: any[] = [];
+  currentTodo: any;
   isEditMode = false;
 
   constructor(private apiService: ApiService) {}
@@ -37,12 +36,8 @@ export class TodoListComponent implements OnInit {
     this.getTodos();
   }
 
-  toggleEditMode(value: boolean) {
-    this.isEditMode = !value;
-    this.isEditModeEvent.emit(!value);
-  }
-
-  getCurrentTodoEvent(todo: any) {
-    this.currentTodoEvent.emit(todo);
-  }
+  // getCurrentTodoEvent(todo: any) {
+  //   this.currentTodoEvent.emit(todo);
+  //   this.currentTodo = todo;
+  // }
 }

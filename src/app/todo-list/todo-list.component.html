@@ -1,4 +1,4 @@
-<div class="list-cont" [class.hidden]="isEditMode">
+<div class="list-cont" *ngIf="!isEditMode">
   <h1>todo-list works!</h1>
 
   <ul>
@@ -6,15 +6,23 @@
       <app-todo-item
         [todo]="todo"
         (itemChanged)="toggleItemChanged($event)"
-        (isEdittedEvent)="toggleEditMode($event)"
-        (currentTodoEvent)="getCurrentTodoEvent($event)"
+        (isEdittedEvent)="isEditMode = $event"
+        (currentTodoEvent)="currentTodo = $event"
       ></app-todo-item>
+      <!-- (currentTodoEvent)="getCurrentTodoEvent($event)" -->
     </li>
   </ul>
+</div>
 
-  <!-- <mat-grid-list [cols]="1" rowHeight="150px">
+<app-edit-todo-form
+  [currentTodo]="currentTodo"
+  [isEditMode]="isEditMode"
+  *ngIf="isEditMode"
+  (offEditModeEvent)="isEditMode = $event"
+></app-edit-todo-form>
+
+<!-- <mat-grid-list [cols]="1" rowHeight="150px">
     <mat-grid-tile *ngFor="let todo of todos">
       <app-todo-item [todo]="todo"></app-todo-item>
     </mat-grid-tile>
   </mat-grid-list> -->
-</div>

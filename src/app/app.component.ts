@@ -10,8 +10,7 @@ export class AppComponent implements OnInit {
   showTodoForm: boolean = false;
   showCategoryForm: boolean = false;
   showTodoList: boolean = true;
-  isEditMode: boolean = false;
-  currentTodo: any;
+  // currentTodo: any;
 
   ngOnInit(): void {
     this.scrollToTop();
@@ -36,16 +35,9 @@ export class AppComponent implements OnInit {
     this.showTodoForm = true;
   }
 
-  handleEditMode(value: boolean) {
-    this.showTodoForm = true;
-    this.showCategoryForm = false;
-    this.showTodoList = false;
-    this.isEditMode = true;
-  }
-
-  getCurrentTodoEvent(todo: any) {
-    this.currentTodo = todo;
-  }
+  // getCurrentTodoEvent(todo: any) {
+  //   this.currentTodo = todo;
+  // }
 
   scrollToTop() {
     window.scrollTo({

@@ -8,7 +8,7 @@ describe('EditTodoFormComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [EditTodoFormComponent]
+      declarations: [EditTodoFormComponent],
     });
     fixture = TestBed.createComponent(EditTodoFormComponent);
     component = fixture.componentInstance;

@@ -51,8 +51,8 @@ export class TodoItemComponent implements OnInit {
   }
 
   handleEdit(todo: any) {
-    this.isEditted = !this.isEditted;
-    this.isEdittedEvent.emit(!this.isEditted);
+    this.isEditted = true;
+    this.isEdittedEvent.emit(true);
     this.currentTodoEvent.emit(todo);
   }
 

@@ -11,7 +11,6 @@ import { ApiService } from '../services/api.service';
 export class TodoFormComponent implements OnInit {
   @Output() showTodoFormEvent = new EventEmitter<boolean>();
   @Output() showTodoListEvent = new EventEmitter<boolean>();
-  @Input() isEditMode!: boolean;
   @Input() currentTodo!: any;
 
   todoForm: FormGroup;
@@ -37,48 +36,23 @@ export class TodoFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCategories();
-
-    if (this.isEditMode) {
-      this.setFormValues();
-    } else {
-      this.todoForm.reset();
-    }
   }
-
-  // setting values of formular for edit mode
-  private setFormValues(): void {
-    this.todoForm.patchValue({
-      title: this.currentTodo.attributes.title,
-      description: this.currentTodo.attributes.description,
-      priority: this.currentTodo.attributes.priority,
-      dueDate: this.currentTodo.attributes.dueDate,
-      category: [this.currentTodo.attributes.category.data.id],
-    });
-  }
-  // currentTodo.attributes.description
 
   // close todo form and open todo list
   handleCancelBtn() {
     this.showTodoFormEvent.emit(false);
     this.showTodoListEvent.emit(true);
     this.scrollToTop();
-    this.isEditMode = false;
     this.todoForm.reset();
   }
 
   // create new or edit todo, close todo form and open todo list
   handleConfirmBtn(): void {
     if (this.todoForm.valid) {
-      if (this.isEditMode) {
-        this.updateTodo();
-      } else {
-        this.createTodo();
-      }
+      this.createTodo();
       this.showTodoFormEvent.emit(false);
       this.showTodoListEvent.emit(true);
       this.scrollToTop();
-      this.isEditMode = false;
-      this.todoForm.reset();
     } else {
       console.log('Form is invalid');
     }
@@ -97,34 +71,6 @@ export class TodoFormComponent implements OnInit {
     };
 
     this.apiService.createTodo(newTodo).subscribe({
-      next: (response) => {
-        console.log('Todo successfuly created:', response);
-      },
-      error: (error) => {
-        console.error('Error while creating todo:', error);
-      },
-    });
-  }
-
-  updateTodo() {
-    const updatedTodoId = this.currentTodo.id;
-    const updatedTodo = {
-      data: {
-        title: this.todoForm.get('title')?.value,
-        description: this.todoForm.get('description')?.value,
-        priority: this.todoForm.get('priority')?.value,
-        dueDate: this.todoForm.get('dueDate')?.value,
-        // // category: [this.todoForm.value.category.id],
-        // category: [this.currentTodo.attributes.category.data.id],
-        // category: [this.currentTodo.attributes.category.data.id],
-      },
-    };
-
-    // console.log(this.todoForm.value);
-    // console.log(this.todoForm.get('category')?.value[0]);
-    // console.log(this.todoForm.value.category.id);
-
-    this.apiService.updateTodo(updatedTodo, updatedTodoId).subscribe({
       next: (response) => {
         console.log('Todo successfuly created:', response);
       },
