@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, Output, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { ApiService } from '../services/api.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-edit-todo-form',
@@ -76,7 +77,9 @@ export class EditTodoFormComponent implements OnInit {
         title: this.todoForm.get('title')?.value,
         description: this.todoForm.get('description')?.value,
         priority: this.todoForm.get('priority')?.value,
-        dueDate: this.todoForm.get('dueDate')?.value,
+        dueDate: moment(this.todoForm.get('dueDate')?.value).format(
+          'YYYY-MM-DD'
+        ),
         // // category: [this.todoForm.value.category.id],
         // category: [this.currentTodo.attributes.category.data.id],
         // category: [this.currentTodo.attributes.category.data.id],
