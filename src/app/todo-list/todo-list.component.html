@@ -5,7 +5,7 @@
     <li *ngFor="let todo of todos">
       <app-todo-item
         [todo]="todo"
-        (itemChanged)="toggleItemChanged($event)"
+        (itemDeleted)="toggleItemChanged($event)"
         (isEdittedEvent)="isEditMode = $event"
         (currentTodoEvent)="currentTodo = $event"
       ></app-todo-item>
@@ -19,6 +19,7 @@
   [isEditMode]="isEditMode"
   *ngIf="isEditMode"
   (offEditModeEvent)="isEditMode = $event"
+  (offEditModeEvent)="toggleItemChanged($event)"
 ></app-edit-todo-form>
 
 <!-- <mat-grid-list [cols]="1" rowHeight="150px">

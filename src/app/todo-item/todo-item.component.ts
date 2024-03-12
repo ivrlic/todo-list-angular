@@ -8,7 +8,7 @@ import { ApiService } from '../services/api.service';
 })
 export class TodoItemComponent implements OnInit {
   @Input() todo: any;
-  @Output() itemChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() itemDeleted: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() isEdittedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() currentTodoEvent: EventEmitter<boolean> =
     new EventEmitter<boolean>();
@@ -41,7 +41,7 @@ export class TodoItemComponent implements OnInit {
   handleDelete(id: any) {
     this.apiService.deleteTodo(id).subscribe({
       next: (response) => {
-        this.itemChanged.emit(true);
+        this.itemDeleted.emit(true);
         console.log('Kategorija je uspješno izbrisana:', response);
       },
       error: (error) => {
