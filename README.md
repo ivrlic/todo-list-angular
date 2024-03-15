@@ -47,6 +47,38 @@ Feel free to clone and explore the project for your own learning purposes. Happy
 
 <br>
 
+## Getting Started:
+
+To run this project locally, follow these steps:
+
+1. Clone the repository to your local machine using Git:
+
+```bash
+   git clone https://github.com/ivrlic/todo-list-angular.git
+```
+
+2. Navigate into the project directory:
+
+```bash
+cd todo-list-angular
+```
+
+3. Install the dependencies using npm:
+
+```bash
+npm install
+```
+
+4. Run the development server:
+
+```bash
+ng serve
+```
+
+5. Open your browser and visit [http://localhost:4200/](http://localhost:4200/) to view the application.
+
+<br>
+
 ## Angular Notes
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.12.
