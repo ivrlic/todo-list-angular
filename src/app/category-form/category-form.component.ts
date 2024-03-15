@@ -14,6 +14,9 @@ export class CategoryFormComponent implements OnInit {
     new EventEmitter<boolean>();
 
   categoryForm: FormGroup;
+  categories: any[] = [];
+  confirmationMsg: string = '';
+  showConfirmMsg: boolean = false;
 
   constructor(private fb: FormBuilder, private apiService: ApiService) {
     this.categoryForm = this.fb.group({
@@ -21,7 +24,9 @@ export class CategoryFormComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getCategories();
+  }
 
   // close category form and open todo list
   handleCancelBtn() {
@@ -30,12 +35,52 @@ export class CategoryFormComponent implements OnInit {
     this.scrollToTop();
   }
 
-  // create new category, close category form and open todo list
+  // creating new category and opening modal with a message
   handleCreateBtn() {
-    this.createCategory();
-    this.showCategoryFormEvent.emit(false);
-    this.showTodoListEvent.emit(true);
-    this.scrollToTop();
+    const catTitle = this.categoryForm.value.title.toUpperCase();
+    // check if there is another category with the same name/title
+    if (this.checkSameCategory()) {
+      this.confirmationMsg = `A category with the same title already exists. Please change the title.`;
+      this.showConfirmMsg = true;
+    } else {
+      this.confirmationMsg = `${catTitle} category has been created.`;
+      this.createCategory();
+      this.scrollToTop();
+      this.showConfirmMsg = true;
+    }
+  }
+
+  // closing modal message, closing category form and opening todo list
+  handleConfirmBtn() {
+    if (this.checkSameCategory()) {
+      this.showConfirmMsg = false;
+    } else {
+      this.showCategoryFormEvent.emit(false);
+      this.showTodoListEvent.emit(true);
+      this.showConfirmMsg = false;
+    }
+  }
+
+  // check if there is another category with the same name/title
+  checkSameCategory() {
+    return this.categories.some((category) => {
+      return (
+        category.attributes.title.toUpperCase() ===
+        this.categoryForm.value.title.toUpperCase()
+      );
+    });
+  }
+
+  // getting categories from the api (upper case)
+  getCategories() {
+    this.apiService.getCategories().subscribe({
+      next: (response) => {
+        this.categories = response.data;
+      },
+      error: (error) => {
+        console.error('Error fetching categories:', error);
+      },
+    });
   }
 
   // creating category using api, posting it to backend

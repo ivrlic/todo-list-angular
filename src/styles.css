@@ -9,11 +9,6 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-/* ++++++++++++++++++++
-??? ovo prebacit u svoju komponentu??? (mat-card, mat-card-header, mat-card-title, mat-form-field) 
-+++++++++++++++++++++++
-*/
-
 mat-card {
   width: fit-content;
   padding: 1rem 2rem;

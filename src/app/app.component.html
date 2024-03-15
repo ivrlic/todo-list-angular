@@ -1,14 +1,14 @@
 <app-navigation
   *ngIf="showCategoryForm; else categoryFormElse"
-  (showTodoFormEvent)="onShowTodoForm($event)"
   (showCategoryFormEvent)="onShowCategoryForm($event)"
+  (showTodoFormEvent)="onShowTodoForm($event)"
   (showTodoListEvent)="showTodoList = $event"
 ></app-navigation>
 
 <ng-template #categoryFormElse>
   <app-navigation
-    (showTodoFormEvent)="onShowTodoForm($event)"
     (showCategoryFormEvent)="onShowCategoryForm($event)"
+    (showTodoFormEvent)="onShowTodoForm($event)"
     (showTodoListEvent)="showTodoList = $event"
   ></app-navigation>
 </ng-template>
@@ -26,9 +26,3 @@
 ></app-category-form>
 
 <app-todo-list *ngIf="showTodoList"></app-todo-list>
-<!-- (currentTodoEvent)="getCurrentTodoEvent($event)" -->
-
-<!-- sorting  container-->
-<!-- filtering -->
-
-<!-- sorting ubacit i u figmu -->

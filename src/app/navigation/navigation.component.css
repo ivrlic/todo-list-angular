@@ -1,3 +1,13 @@
+.header {
+  height: 4rem;
+}
+
+.header-left-cont {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .toolbar-icon {
   margin-right: 1rem;
 }
@@ -10,7 +20,67 @@
 
 .show-nav-btn {
   margin-right: 0.75rem;
+}
+
+.header-right-cont {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1.25rem;
+  margin-left: auto;
+}
+
+.header-right-cont p {
+  position: absolute;
+  top: 1.5rem;
+  right: 1rem;
+  font-size: 1rem;
+  margin-bottom: 1.25rem;
+  color: #3f51b5;
+  background-color: white;
+  border-bottom: 1px solid #3f51b5;
+  border-radius: 5px;
+  padding: 0.125rem 0.5rem;
+  cursor: pointer;
+  z-index: 3;
+}
+
+.header-right-cont p:hover,
+.header-right-cont p:focus {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.header-right-cont p:active {
+  background-color: rgba(255, 255, 255, 0.65);
+}
+
+.cont-background {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #3f51b5;
+  height: 4rem;
+  width: 250px;
   z-index: 2;
+}
+
+mat-form-field {
+  position: absolute;
+  top: 3.75rem;
+  right: 0.25rem;
+  width: 120px;
+  z-index: 1;
+}
+
+mat-form-field:first-of-type {
+  right: 7.75rem;
+}
+
+mat-label,
+mat-option {
+  font-size: 0.875rem;
 }
 
 .side-nav-cont {
@@ -39,6 +109,12 @@
   color: #3f51b5;
 }
 
+.sign-in-btn {
+  position: absolute;
+  top: 1rem;
+  right: 4rem;
+}
+
 .greet-cont,
 .tasks-cont {
   border-bottom: 1px solid #f8fff8;
@@ -59,7 +135,52 @@
   color: #00000043;
 }
 
+.confirm-del-modal-bckg {
+  height: 100%;
+  width: 100%;
+  background-color: rgba(245, 245, 245, 0.8);
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.confirm-del-modal {
+  width: 280px;
+  padding: 2rem 1.5rem 1.5rem;
+  background-color: whitesmoke;
+  border: 1px solid black;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 2px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: 1px;
+}
+
+.confirm-modal-text {
+  margin-bottom: 2rem;
+}
+
+.confirm-del-modal button {
+  font-size: 1rem;
+}
+
+.confirm-del-modal button:first-of-type {
+  margin-right: 2rem;
+}
+
 /* media queries */
+@media (min-width: 600px) {
+  .confirm-del-modal {
+    width: 320px;
+    padding: 2rem 2rem 1.5rem;
+  }
+}
+
 @media (min-width: 1280px) {
   mat-toolbar span {
     font-size: 1.5rem;
@@ -67,6 +188,23 @@
 
   .show-nav-icon {
     font-size: 1.75rem;
+  }
+
+  .header-right-cont p {
+    font-size: 1.125rem;
+  }
+
+  .cont-background {
+    width: 350px;
+  }
+
+  mat-form-field {
+    width: 150px;
+  }
+
+  mat-label,
+  mat-option {
+    font-size: 1rem;
   }
 
   .side-nav-cont {
@@ -88,5 +226,23 @@
   .tasks-cont button,
   .category-cont button {
     font-size: 1rem;
+  }
+
+  .confirm-del-modal {
+    width: 400px;
+    padding: 2.5rem;
+    font-size: 1.125rem;
+  }
+
+  .confirm-modal-text {
+    margin-bottom: 3rem;
+  }
+
+  .confirm-del-modal button {
+    font-size: 1.125rem;
+  }
+
+  .confirm-del-modal button:first-of-type {
+    margin-right: 3rem;
   }
 }

@@ -11,11 +11,10 @@ import * as moment from 'moment';
 })
 export class EditTodoFormComponent implements OnInit {
   @Output() offEditModeEvent = new EventEmitter<boolean>();
-  @Input() isEditMode!: boolean;
   @Input() currentTodo!: any;
 
   todoForm: FormGroup;
-  formattedDate: string | null;
+  // formattedDate: string | null;
   categories: any[] = [];
 
   constructor(
@@ -31,8 +30,8 @@ export class EditTodoFormComponent implements OnInit {
       dueDate: ['', Validators.required],
     });
 
-    const date = new Date();
-    this.formattedDate = this.datePipe.transform(date, 'MM/dd/yyyy');
+    // const date = new Date();
+    // this.formattedDate = this.datePipe.transform(date, 'MM/dd/yyyy');
   }
 
   ngOnInit(): void {
@@ -47,7 +46,7 @@ export class EditTodoFormComponent implements OnInit {
       description: this.currentTodo.attributes.description,
       priority: this.currentTodo.attributes.priority,
       dueDate: this.currentTodo.attributes.dueDate,
-      category: this.currentTodo.attributes.category,
+      category: this.currentTodo.attributes.category.data.id,
     });
   }
 
@@ -55,7 +54,6 @@ export class EditTodoFormComponent implements OnInit {
   handleCancelBtn() {
     this.offEditModeEvent.emit(false);
     this.scrollToTop();
-    this.isEditMode = false;
   }
 
   // create new or edit todo, close todo form and open todo list
@@ -63,13 +61,15 @@ export class EditTodoFormComponent implements OnInit {
     if (this.todoForm.valid) {
       this.updateTodo();
       this.scrollToTop();
-      this.offEditModeEvent.emit(false);
-      this.isEditMode = false;
+      setTimeout(() => {
+        this.offEditModeEvent.emit(false);
+      }, 100);
     } else {
       console.log('Form is invalid');
     }
   }
 
+  // creating updated todo of the form values and posting it to backend rest api
   updateTodo() {
     const updatedTodoId = this.currentTodo.id;
     const updatedTodo = {
@@ -80,9 +80,7 @@ export class EditTodoFormComponent implements OnInit {
         dueDate: moment(this.todoForm.get('dueDate')?.value).format(
           'YYYY-MM-DD'
         ),
-        // // category: [this.todoForm.value.category.id],
-        // category: [this.currentTodo.attributes.category.data.id],
-        // category: [this.currentTodo.attributes.category.data.id],
+        category: this.todoForm.value.category,
       },
     };
 

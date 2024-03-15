@@ -1,6 +1,5 @@
 import { Component, EventEmitter, OnInit, Output, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DatePipe } from '@angular/common';
 import { ApiService } from '../services/api.service';
 import * as moment from 'moment';
 
@@ -15,14 +14,9 @@ export class TodoFormComponent implements OnInit {
   @Input() currentTodo!: any;
 
   todoForm: FormGroup;
-  formattedDate: string | null;
   categories: any[] = [];
 
-  constructor(
-    private fb: FormBuilder,
-    private datePipe: DatePipe,
-    private apiService: ApiService
-  ) {
+  constructor(private fb: FormBuilder, private apiService: ApiService) {
     this.todoForm = this.fb.group({
       title: ['', [Validators.required, Validators.maxLength(50)]],
       description: ['', [Validators.required, Validators.maxLength(200)]],
@@ -30,9 +24,6 @@ export class TodoFormComponent implements OnInit {
       category: ['', Validators.required],
       dueDate: ['', Validators.required],
     });
-
-    const date = new Date();
-    this.formattedDate = this.datePipe.transform(date, 'MM/dd/yyyy');
   }
 
   ngOnInit(): void {
@@ -44,7 +35,6 @@ export class TodoFormComponent implements OnInit {
     this.showTodoFormEvent.emit(false);
     this.showTodoListEvent.emit(true);
     this.scrollToTop();
-    this.todoForm.reset();
   }
 
   // create new or edit todo, close todo form and open todo list
@@ -69,7 +59,7 @@ export class TodoFormComponent implements OnInit {
         dueDate: moment(this.todoForm.get('dueDate')?.value).format(
           'YYYY-MM-DD'
         ),
-        category: [this.todoForm.value.category.id],
+        category: this.todoForm.value.category.id,
       },
     };
 
@@ -83,7 +73,7 @@ export class TodoFormComponent implements OnInit {
     });
   }
 
-  // getting categories from the api (upper case)
+  // getting categories from the api
   getCategories() {
     this.apiService.getCategories().subscribe({
       next: (response) => {

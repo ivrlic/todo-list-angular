@@ -1,3 +1,7 @@
+.form-cont {
+  padding-bottom: 3rem;
+}
+
 mat-card {
   max-width: 950px;
   margin: 0 auto;

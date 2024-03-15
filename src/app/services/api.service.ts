@@ -1,18 +1,65 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-  private todoUrl = 'http://localhost:1337/api/todos';
-  private todoUrlWithCategory =
-    'http://localhost:1337/api/todos?populate[0]=category';
-  private categoryUrl = 'http://localhost:1337/api/categories';
+  private todoUrl: string = 'http://localhost:1337/api/todos';
+  private categoryUrl: string = 'http://localhost:1337/api/categories';
+
+  private baseUrlTodos: string = `http://localhost:1337/api/todos`;
+  private sortPartUrlTodos: string = `[sort]=updatedAt%3Adesc`;
+  private filterPartUrlTodos: string = `populate[0]=category`;
+  private todoUrlWithCategory: string = `${this.baseUrlTodos}?${this.sortPartUrlTodos}&${this.filterPartUrlTodos}`;
+
+  private loginUserUrl = `http://localhost:1337/api/auth/local`;
+  private registerUserUrl = `http://localhost:1337/api/auth/local/register`;
+  private myToken: string = localStorage.getItem('token') || '';
+  private myUsername: string = localStorage.getItem('username') || '';
 
   constructor(private http: HttpClient) {}
+
+  getUsername() {
+    return this.myUsername;
+  }
+
+  setUsername(newName: string) {
+    this.myUsername = newName;
+  }
+
+  getToken() {
+    return this.myToken;
+  }
+
+  setToken(newToken: string) {
+    this.myToken = newToken;
+  }
+
+  getTodoUrlWithCategory() {
+    return this.todoUrlWithCategory;
+  }
+
+  setTodoUrlWithCategory(
+    sort: string = this.sortPartUrlTodos,
+    filter: string = this.filterPartUrlTodos
+  ): void {
+    this.todoUrlWithCategory = `${this.baseUrlTodos}?${sort}&${filter}`;
+  }
+
+  getFilterPartUrlTodos() {
+    return this.filterPartUrlTodos;
+  }
+
+  setFilterPartUrlTodos(newUrl: string): void {
+    this.filterPartUrlTodos = newUrl;
+  }
+
+  setSortPartUrlTodos(newUrl: string): void {
+    this.sortPartUrlTodos = newUrl;
+  }
 
   getCategories(): Observable<any> {
     return this.getData(this.categoryUrl);
@@ -43,8 +90,7 @@ export class ApiService {
   }
 
   private getHeaders(): HttpHeaders {
-    const token =
-      '5f4c76160711732c19f6dfc19eeff85ae78a8fd55068d8717ba34f16a64f466c614d56cef88910fe69bc9e8c3c543eeec5baaf4f1046e493fb026beeddd26714ed67d340164a7f1e6b3831893a8ba01ad6b45439d05a0ef0ccfec3d963fc12f4348b1abf97903462179bca0ddfe3180671744674ce8324d7038735fa9a4cffff';
+    const token = this.myToken;
     return new HttpHeaders({
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
@@ -59,7 +105,7 @@ export class ApiService {
       })
       .pipe(
         catchError((error) => {
-          console.error('Greška prilikom dohvaćanja podataka:', error);
+          console.error('Error while fetching data:', error);
           return throwError(() => new Error('Something went wrong'));
         })
       );
@@ -70,7 +116,7 @@ export class ApiService {
     const headers = this.getHeaders();
     return this.http.post<any>(apiUrl, data, { headers }).pipe(
       catchError((error) => {
-        console.error('Greška prilikom stvaranja podataka:', error);
+        console.error('Error while creating data:', error);
         return throwError(() => new Error('Something went wrong'));
       })
     );
@@ -81,7 +127,7 @@ export class ApiService {
     const url = `${apiUrl}/${id}`;
     return this.http.put<any>(url, data, { headers }).pipe(
       catchError((error) => {
-        console.error('Greška prilikom ažuriranja podataka:', error);
+        console.error('Error while updating data:', error);
         return throwError(() => new Error('Something went wrong'));
       })
     );
@@ -92,11 +138,38 @@ export class ApiService {
     const url = `${apiUrl}/${id}`;
     return this.http.delete<any>(url, { headers }).pipe(
       catchError((error) => {
-        console.error('Greška prilikom brisanja podataka:', error);
+        console.error('Error while deleting data:', error);
         return throwError(() => new Error('Something went wrong'));
       })
     );
   }
 
-  // Ostale metode za slanje HTTP zahtjeva...
+  createUser(data: any): Observable<any> {
+    const apiUrl = this.registerUserUrl;
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+
+    return this.http.post<any>(apiUrl, data, { headers }).pipe(
+      catchError((error) => {
+        console.error('Error while creating data:', error);
+        return throwError(() => new Error('Something went wrong'));
+      })
+    );
+  }
+
+  loginUser(data: any): Observable<any> {
+    const apiUrl = this.loginUserUrl;
+
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+
+    return this.http.post<any>(apiUrl, data, { headers }).pipe(
+      catchError((error) => {
+        console.error('Error while creating data:', error);
+        return throwError(() => new Error(error.status));
+      })
+    );
+  }
 }

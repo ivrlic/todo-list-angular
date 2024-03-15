@@ -34,3 +34,18 @@
     </mat-card-actions>
   </mat-card>
 </div>
+
+<!-- modal message  -->
+<!-- warning that category couldn't be created or that it was created -->
+<div class="confirm-modal-bckg" *ngIf="showConfirmMsg">
+  <div class="confirm-modal">
+    <div mat-dialog-content class="confirm-modal-text">
+      {{ confirmationMsg }}
+    </div>
+    <div mat-dialog-actions class="confirm-modal-actions">
+      <button mat-button (click)="handleConfirmBtn()" cdkFocusInitial>
+        OK
+      </button>
+    </div>
+  </div>
+</div>

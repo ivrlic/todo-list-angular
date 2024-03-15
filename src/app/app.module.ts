@@ -4,9 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { NavigationComponent } from './navigation/navigation.component';
-import { SortingComponent } from './sorting/sorting.component';
 import { TodoItemComponent } from './todo-item/todo-item.component';
-import { NewTodoFormComponent } from './new-todo-form/new-todo-form.component';
 import { EditTodoFormComponent } from './edit-todo-form/edit-todo-form.component';
 import { TodoListComponent } from './todo-list/todo-list.component';
 
@@ -30,18 +28,20 @@ import { DatePipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { TodoFormComponent } from './todo-form/todo-form.component';
 import { CategoryFormComponent } from './category-form/category-form.component';
+import { RegistrationFormComponent } from './registration-form/registration-form.component';
+import { LoginFormComponent } from './login-form/login-form.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavigationComponent,
-    SortingComponent,
     TodoItemComponent,
-    NewTodoFormComponent,
     EditTodoFormComponent,
     TodoListComponent,
     TodoFormComponent,
     CategoryFormComponent,
+    RegistrationFormComponent,
+    LoginFormComponent,
   ],
   imports: [
     FlexLayoutModule,

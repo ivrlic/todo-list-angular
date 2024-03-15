@@ -1,0 +1,89 @@
+<div class="modal-bckg">
+  <div class="form-cont">
+    <mat-card>
+      <mat-card-header fxLayout="row" fxLayoutAlign="center">
+        <mat-card-title> Login </mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form [formGroup]="loginForm">
+          <mat-form-field>
+            <mat-label>Username</mat-label>
+            <input matInput formControlName="username" placeholder="Username" />
+            <mat-error
+              *ngIf="
+                loginForm.get('username')?.invalid &&
+                loginForm.get('username')?.touched
+              "
+              >Username required, min 3 characters, max 15 characters
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              formControlName="password"
+              [type]="hidePassLetters ? 'password' : 'text'"
+              placeholder="Password"
+            />
+            <button
+              mat-icon-button
+              matSuffix
+              (click)="hidePassLetters = !hidePassLetters"
+              [attr.aria-label]="'hidePassLetters password'"
+              [attr.aria-pressed]="hidePassLetters"
+            >
+              <mat-icon>{{
+                hidePassLetters ? "visibility_off" : "visibility"
+              }}</mat-icon>
+            </button>
+            <mat-error
+              *ngIf="
+                loginForm.get('password')?.invalid &&
+                loginForm.get('password')?.touched
+              "
+              >Password required, min 4 characters</mat-error
+            >
+          </mat-form-field>
+        </form>
+
+        <div class="for-registration-notice">
+          Don't have an account?
+          <button class="for-registration-btn" (click)="handleShowReg()">
+            Register here
+          </button>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions fxLayout="row" fxLayoutAlign="space-between">
+        <button mat-raised-button color="primary" (click)="handleCancelBtn()">
+          Cancel
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="handleConfirmBtn()"
+          [disabled]="loginForm.invalid"
+        >
+          Login
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
+
+<!-- modal message  -->
+<!-- warning that something went wrong (probably wrong pass or username) -->
+<div class="confirm-modal-bckg" *ngIf="showWarningModal">
+  <div class="confirm-modal">
+    <div mat-dialog-content class="confirm-modal-text">
+      Invalid username or password.
+    </div>
+    <div mat-dialog-actions class="confirm-modal-actions">
+      <button mat-button (click)="handleWarningBtn()" cdkFocusInitial>
+        OK
+      </button>
+    </div>
+  </div>
+</div>

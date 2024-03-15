@@ -14,30 +14,20 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.scrollToTop();
+    // localStorage.clear();
   }
 
-  // if todo form is open, category form has to be closed
+  // scroll to top and show/hide todo form
   onShowTodoForm(value: boolean) {
     this.scrollToTop();
     this.showTodoForm = value;
-    this.showCategoryForm = !value;
   }
 
-  // if category form is open, todo form has to be closed
+  // scroll to top and show/hide category form
   onShowCategoryForm(value: boolean) {
     this.scrollToTop();
     this.showCategoryForm = value;
-    this.showTodoForm = !value;
   }
-
-  // after item changed render again todos/tasks
-  toggleItemChanged(value: boolean) {
-    this.showTodoForm = true;
-  }
-
-  // getCurrentTodoEvent(todo: any) {
-  //   this.currentTodo = todo;
-  // }
 
   scrollToTop() {
     window.scrollTo({

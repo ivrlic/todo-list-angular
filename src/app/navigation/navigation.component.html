@@ -1,8 +1,36 @@
 <mat-toolbar color="primary" class="header">
-  <button mat-icon-button (click)="toggleNavigation()" class="show-nav-btn">
-    <mat-icon class="show-nav-icon" aria-label="menu"> menu </mat-icon>
-  </button>
-  <span>Todo list</span>
+  <div class="header-left-cont">
+    <button mat-icon-button (click)="toggleNavigation()" class="show-nav-btn">
+      <mat-icon class="show-nav-icon" aria-label="menu"> menu </mat-icon>
+    </button>
+    <span>Todo list</span>
+  </div>
+
+  <div class="header-right-cont">
+    <div class="cont-background"></div>
+    <p (click)="toggleSortOptions()">Sort by:</p>
+    <mat-form-field
+      class="sort-due-date"
+      [@openCloseSort]="showSortOptions ? 'open' : 'closed'"
+    >
+      <mat-label>Due Date</mat-label>
+      <mat-select (selectionChange)="handleSorting($event.value)">
+        <mat-option value="dueDateAsc">Earliest</mat-option>
+        <mat-option value="dueDateDesc">Latest</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field
+      class="sort-updated-todo"
+      [@openCloseSort]="showSortOptions ? 'open' : 'closed'"
+    >
+      <mat-label>Updated</mat-label>
+      <mat-select (selectionChange)="handleSorting($event.value)">
+        <mat-option value="updTimeAsc">Oldest</mat-option>
+        <mat-option value="updTimeDesc">Newest</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 </mat-toolbar>
 
 <mat-toolbar
@@ -12,7 +40,15 @@
   <!-- First section -->
   <div class="greet-cont">
     <mat-icon class="profile-img">person</mat-icon>
-    <p class="greet-text">Good day, my dear!</p>
+    <button
+      mat-icon-button
+      class="sign-in-btn"
+      aria-label="Sign in"
+      (click)="handleShowLogin()"
+    >
+      <mat-icon>account_circle</mat-icon>
+    </button>
+    <p class="greet-text">Good day, my dear {{ username }}!</p>
   </div>
 
   <!-- Second section -->
@@ -21,11 +57,20 @@
       New task<mat-icon>add</mat-icon>
     </button>
     <mat-nav-list>
-      <mat-list-item>TODAY</mat-list-item>
-      <mat-list-item>UPCOMING</mat-list-item>
-      <mat-list-item>OVERDUE</mat-list-item>
-      <mat-list-item>UNCOMPLETED</mat-list-item>
-      <mat-list-item>COMPLETED</mat-list-item>
+      <mat-list-item (click)="handleFiltering('today')">TODAY</mat-list-item>
+      <mat-list-item (click)="handleFiltering('upcoming')"
+        >UPCOMING</mat-list-item
+      >
+      <mat-list-item (click)="handleFiltering('overDue')"
+        >OVERDUE</mat-list-item
+      >
+      <mat-list-item (click)="handleFiltering('uncompleted')"
+        >UNCOMPLETED</mat-list-item
+      >
+      <mat-list-item (click)="handleFiltering('completed')"
+        >COMPLETED</mat-list-item
+      >
+      <mat-list-item (click)="handleFiltering('all')">ALL</mat-list-item>
     </mat-nav-list>
   </div>
 
@@ -36,16 +81,21 @@
     </button>
     <mat-nav-list>
       <div *ngFor="let category of categories" class="category-title-cont">
-        <mat-list-item>
+        <mat-list-item (click)="handleFiltering(category.attributes.title)">
           {{ category.attributes.title.toUpperCase() }}
         </mat-list-item>
         <button
           mat-icon-button
           aria-label="Delete"
           class="icon-btn"
-          [disabled]="category.attributes.title === 'General'"
-          *ngIf="category.attributes.title !== 'General'"
-          (click)="handleDeleteCategoryBtn(category.id)"
+          [disabled]="category.attributes.title === 'general'"
+          *ngIf="category.attributes.title !== 'general'"
+          (click)="
+            handleDeleteCategoryBtn(
+              category.id,
+              category.attributes.title.toUpperCase()
+            )
+          "
         >
           <mat-icon>delete</mat-icon>
         </button>
@@ -53,3 +103,33 @@
     </mat-nav-list>
   </div>
 </mat-toolbar>
+
+<!-- modal message  -->
+<!-- ask for confirmation before deleting category -->
+<div class="confirm-del-modal-bckg" *ngIf="showConfirmMsg">
+  <div class="confirm-del-modal">
+    <div mat-dialog-content class="confirm-modal-text">
+      {{ confirmationMsg }}
+    </div>
+    <div mat-dialog-actions class="confirm-modal-actions">
+      <button mat-button (click)="handleCancelDelete()">Cancel</button>
+      <button mat-button (click)="handleConfirmDelete()" cdkFocusInitial>
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- form for new user registration  -->
+<app-registration-form
+  *ngIf="showRegModal"
+  (showLoginModalEvent)="showLoginModal = $event"
+  (showRegModalEvent)="showRegModal = $event"
+></app-registration-form>
+
+<!-- form for user login  -->
+<app-login-form
+  *ngIf="showLoginModal"
+  (showLoginModalEvent)="showLoginModal = $event"
+  (showRegModalEvent)="showRegModal = $event"
+></app-login-form>

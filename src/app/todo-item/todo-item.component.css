@@ -115,10 +115,53 @@ input[type="checkbox"] {
     0 16px 24px 0 rgba(0, 0, 0, 0.14), 0 6px 30px 0 rgba(0, 0, 0, 0.12);
 }
 
+.confirm-del-modal-bckg {
+  height: 100%;
+  width: 100%;
+  background-color: rgba(245, 245, 245, 0.8);
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.confirm-del-modal {
+  width: 280px;
+  padding: 2rem 1.5rem 1.5rem;
+  background-color: whitesmoke;
+  border: 1px solid black;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 2px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: 1px;
+}
+
+.confirm-modal-text {
+  margin-bottom: 2rem;
+}
+
+.confirm-del-modal button {
+  font-size: 1rem;
+}
+
+.confirm-del-modal button:first-of-type {
+  margin-right: 2rem;
+}
+
 /* media queries */
 @media (min-width: 600px) {
   .todo-item {
     width: 380px;
+  }
+
+  .confirm-del-modal {
+    width: 320px;
+    padding: 2rem 2rem 1.5rem;
   }
 }
 
@@ -181,5 +224,23 @@ input[type="checkbox"] {
 
   .mat-icon {
     font-size: 1.75rem;
+  }
+
+  .confirm-del-modal {
+    width: 400px;
+    padding: 2.5rem;
+    font-size: 1.125rem;
+  }
+
+  .confirm-modal-text {
+    margin-bottom: 3rem;
+  }
+
+  .confirm-del-modal button {
+    font-size: 1.125rem;
+  }
+
+  .confirm-del-modal button:first-of-type {
+    margin-right: 3rem;
   }
 }
