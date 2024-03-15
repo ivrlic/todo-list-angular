@@ -24,6 +24,8 @@ An application developed in Angular for managing todo lists. The frontend is dev
 - Angular
 - Strapi
 
+<br>
+
 ## Libraries:
 
 - Angular Material: `ng add @angular/material`
